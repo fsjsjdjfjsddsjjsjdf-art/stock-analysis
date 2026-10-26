@@ -17,3 +17,6 @@ An institutional-grade, multi-module Indian Stock Market (NSE/BSE) day-trading t
 ## How to Run Locally
 1. Clone or download this repository.
 2. Open `index.html` in any modern web browser.
+
+> **⚠️ IMPORTANT LEGAL DISCLAIMER**: 
+> This software ("BHARATQUANT") is an **experimental AI simulation and educational exercise only**. It does **not** constitute financial, legal, or investment advice, nor is it a recommendation to trade or invest in any security (NSE/BSE or otherwise). The authors and contributors assume **no responsibility or liability** for any financial losses or damages resulting from the use of this software. Always consult a SEBI-registered financial advisor before making any investment decisions.
