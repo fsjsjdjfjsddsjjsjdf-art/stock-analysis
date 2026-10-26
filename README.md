@@ -1,3 +1,4 @@
+## Not Recommend for investment decisions(AI Generated code ) 
 # BHARATQUANT: India Stock Market Day-Trader Terminal & EOD Playground
 
 An institutional-grade, multi-module Indian Stock Market (NSE/BSE) day-trading terminal, real-time momentum scanner, interactive charting engine, risk position sizer, and daily End-of-Day (EOD) audit playground tailored for ₹ INR trading.
