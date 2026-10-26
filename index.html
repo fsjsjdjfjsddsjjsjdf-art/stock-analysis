@@ -8,6 +8,9 @@
 </head>
 <body>
     <header>
+        <div style="background: #7f1d1d; color: #fca5a5; padding: 6px 16px; font-size: 0.75rem; text-align: center; font-weight: 700; border-bottom: 1px solid #991b1b;">
+    ⚠️ DISCLAIMER: BHARATQUANT is merely an experimental AI simulation for educational and research purposes. IT IS NOT FINANCIAL OR INVESTMENT ADVICE. Do not use this terminal or its suggestions for real-world investing or trading.
+</div>
         <div class="logo">⚡ BHARATQUANT <span style="font-size: 0.75rem; background: var(--accent-blue); padding: 2px 6px; border-radius: 4px; color: white;">NSE/BSE v2.6 Modular</span></div>
         <div style="display: flex; gap: 12px; align-items: center;">
             <span id="ist-clock" style="font-size: 0.85rem; color: var(--text-muted);">12:49:00 PM IST</span>
@@ -100,6 +103,22 @@
             const report = generateEODReport([{symbol: 'ETERNAL.NS', prevClose: 304.45, ltp: 317.40}]);
             alert('EOD Report: ' + JSON.stringify(report));
         };
+
+        window.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('disclaimer_accepted')) {
+        const accepted = confirm(
+            "⚠️ BHARATQUANT DISCLAIMER & TERMS OF USE:\n\n" +
+            "This application is strictly an experimental AI simulation and educational tool. " +
+            "It is NOT intended for real financial trading or investment purposes.\n\n" +
+            "By clicking OK, you acknowledge that you will not use this tool for actual investing and hold the creators harmless from any legal or financial consequences."
+        );
+        if (accepted) {
+            localStorage.setItem('disclaimer_accepted', 'true');
+        } else {
+            document.body.innerHTML = "<h2 style='color:white; text-align:center; margin-top:20vh;'>Access Denied. You must acknowledge the simulation disclaimer to view this page.</h2>";
+        }
+    }
+});
     </script>
 </body>
 </html>
