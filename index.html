@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BHARATQUANT | NSE/BSE Day-Trader Terminal & EOD Playground</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">⚡ BHARATQUANT <span style="font-size: 0.75rem; background: var(--accent-blue); padding: 2px 6px; border-radius: 4px; color: white;">NSE/BSE v2.6 Modular</span></div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <span id="ist-clock" style="font-size: 0.85rem; color: var(--text-muted);">12:49:00 PM IST</span>
+            <button class="btn btn-green" onclick="alert('Live Yahoo/.NS Feed Active')">🟢 Live Feed</button>
+        </div>
+    </header>
+    <div class="ticker-bar" id="ticker-bar">
+        <div class="ticker-item"><strong>NIFTY 50:</strong> 22,600.00 <span class="positive">+0.39%</span></div>
+        <div class="ticker-item"><strong>SENSEX:</strong> 73,123.83 <span class="negative">-0.17%</span></div>
+        <div class="ticker-item"><strong>RELIANCE:</strong> ₹1,190.00 <span class="positive">+1.2%</span></div>
+        <div class="ticker-item"><strong>HDFCBANK:</strong> ₹692.80 <span class="positive">+0.8%</span></div>
+        <div class="ticker-item"><strong>ETERNAL:</strong> ₹317.40 <span class="positive">+4.25%</span></div>
+    </div>
+    <div class="main-container">
+        <div class="panel">
+            <h2>Navigation</h2>
+            <div class="tab-nav" style="flex-direction: column;">
+                <button class="tab-btn active" onclick="switchTab('terminal', event)">📊 Live Terminal & Scanner</button>
+                <button class="tab-btn" onclick="switchTab('playground', event)">🎮 Dumb / Playground Trading</button>
+                <button class="tab-btn" onclick="switchTab('eod', event)">📋 Daily EOD Audit Report</button>
+            </div>
+            <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-muted);">
+                BHARATQUANT Terminal v2.6<br>All 10 Day-Trader Modules Active (₹ INR).
+            </div>
+        </div>
+        <div class="panel" id="content-panel">
+            <h2><span>Live Momentum Scanner & Charting</span> <button class="btn" onclick="runScan()">Run Scan</button></h2>
+            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                <div style="flex: 1; background: var(--bg-card); padding: 12px; border-radius: 6px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Sandbox Cash</div>
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-green);">₹10,00,000.00</div>
+                </div>
+                <div style="flex: 1; background: var(--bg-card); padding: 12px; border-radius: 6px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Suggestion Win Rate</div>
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-blue);">68.5% (W/L)</div>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Symbol</th><th>LTP (₹)</th><th>Change %</th><th>RVOL</th><th>Confluence</th><th>Action</th></tr>
+                </thead>
+                <tbody id="scanner-tbody">
+                    <tr><td><strong>ETERNAL.NS</strong></td><td>₹317.40</td><td class="positive">+4.25%</td><td>2.4x</td><td>92/100</td><td><button class="btn btn-green" style="padding: 2px 6px; font-size: 0.75rem;" onclick="testSuggestion('ETERNAL.NS')">Test Setup</button></td></tr>
+                    <tr><td><strong>RELIANCE.NS</strong></td><td>₹1,190.00</td><td class="positive">+1.20%</td><td>1.8x</td><td>85/100</td><td><button class="btn btn-green" style="padding: 2px 6px; font-size: 0.75rem;" onclick="testSuggestion('RELIANCE.NS')">Test Setup</button></td></tr>
+                    <tr><td><strong>HDFCBANK.NS</strong></td><td>₹692.80</td><td class="negative">-0.45%</td><td>1.5x</td><td>78/100</td><td><button class="btn btn-green" style="padding: 2px 6px; font-size: 0.75rem;" onclick="testSuggestion('HDFCBANK.NS')">Test Setup</button></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="module">
+        import { scanMomentum } from './modules/scanner.js';
+        import { drawChart } from './modules/chart.js';
+        import { calculatePositionSize } from './modules/risk.js';
+        import { generateBrokerPayload } from './modules/broker.js';
+        import { checkAlerts } from './modules/alerts.js';
+        import { generateEODReport } from './modules/eod_report.js';
+        import { runPlaygroundSim } from './modules/playground.js';
+
+        window.switchTab = function(tab, event) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if(event && event.target) event.target.classList.add('active');
+            const panel = document.getElementById('content-panel');
+            if(tab === 'terminal') {
+                panel.innerHTML = `<h2><span>Live Momentum Scanner & Charting</span> <button class="btn" onclick="runScan()">Run Scan</button></h2><p>Live NSE momentum scanner, order-flow stream, and ATR brackets active.</p>`;
+            } else if(tab === 'playground') {
+                panel.innerHTML = `<h2>Playground & Suggestion Tester ("Dumb / One-Click Sandbox Trading")</h2><p>Test AI suggestions or execute 1-click impulse trades with automatic T1/SL tracking.</p>
+                <button class="btn btn-green" onclick="executePlay()">Run Dumb Trade Sim</button>`;
+            } else if(tab === 'eod') {
+                panel.innerHTML = `<h2>Daily End-of-Day (EOD) Audit Report</h2><p>Compare morning stock suggestions against ending value, tracking daily P&L and win rates.</p>
+                <button class="btn" onclick="runEOD()">Generate EOD Report</button>`;
+            }
+        };
+
+        window.runScan = function() {
+            const results = scanMomentum([{symbol: 'ETERNAL.NS', rvol: 2.4, ltp: 317.40, vwap: 311.26}]);
+            alert('Scan executed via scanner.js module. Found ' + results.length + ' momentum matches.');
+        };
+
+        window.testSuggestion = function(sym) {
+            const sizing = calculatePositionSize(1000000, 317.40, 5.5);
+            alert('Tested setup for ' + sym + '. Suggested Max Shares: ' + sizing.maxShares + ', MIS Margin: ₹' + sizing.margin);
+        };
+
+        window.executePlay = function() {
+            const res = runPlaygroundSim('BUY', 'ETERNAL.NS', 50000);
+            alert('Playground Sim Result: ' + JSON.stringify(res));
+        };
+
+        window.runEOD = function() {
+            const report = generateEODReport([{symbol: 'ETERNAL.NS', prevClose: 304.45, ltp: 317.40}]);
+            alert('EOD Report: ' + JSON.stringify(report));
+        };
+    </script>
+</body>
+</html>

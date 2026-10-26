@@ -1,0 +1,16 @@
+{
+  "name": "stock-analysis",
+  "version": "1.0.0",
+  "description": "BHARATQUANT India Stock Market Day-Trader Terminal",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'Open index.html in your browser'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/stock-analysis.git"
+  },
+  "keywords": ["nse", "bse", "india", "stocks", "trading"],
+  "author": "Trader",
+  "license": "MIT"
+}
